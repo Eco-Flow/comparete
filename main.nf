@@ -17,7 +17,6 @@ log.info """\
 
  =========================================""".stripIndent()
 
-include { GET_DATA } from './modules/local/getdata.nf'
 include { DOWNLOAD_NCBI } from './modules/local/download_ncbi.nf'
 include { GFFREAD } from './modules/local/gffread.nf'
 include { ORTHOFINDER } from './modules/local/orthofinder.nf'
@@ -62,7 +61,7 @@ workflow {
 
    if (params.orthofinder){
 
-      ORTHOFINDER_CAFE ( merge_ch )
+      ORTHOFINDER ( merge_ch )
 
    }
 
