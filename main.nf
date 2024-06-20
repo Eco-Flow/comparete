@@ -20,7 +20,7 @@ log.info """\
 include { DOWNLOAD_NCBI } from './modules/local/download_ncbi.nf'
 include { GFFREAD } from './modules/local/gffread.nf'
 include { ORTHOFINDER } from './modules/local/orthofinder.nf'
-//include { EARLGREY } from './modules/local/earlgrey.nf'
+include { EARLGREY } from './modules/local/earlgrey.nf'
 
 include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-validation'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -65,6 +65,7 @@ workflow {
 
    }
 
-   //EARLGREY (DOWNLOAD_NCBI.out.genome.mix(input_type.local))
+   //Only takes NCBI genomes, but later we need to add locally input genomes.
+   EARLGREY (DOWNLOAD_NCBI.out.genome_only)
 
 }

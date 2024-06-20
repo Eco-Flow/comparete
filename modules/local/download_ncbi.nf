@@ -10,6 +10,7 @@ process DOWNLOAD_NCBI {
 
     output:
     tuple val(sample_id), path("${sample_id}.genome.fna"), path("${sample_id}.genomic.gff"), emit: genome
+    tuple val(sample_id), path("${sample_id}.genome.fna"), emit: genome_only
     path "versions.yml", emit: versions
 
     script:
