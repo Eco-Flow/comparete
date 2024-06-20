@@ -1,0 +1,12 @@
+work
+nextflow
+.nextflow
+**/.nextflow.log*
+**/history
+nf-test
+.nextflow.pid
+/.nextflow/history
+results
+.nf-test
+.nf-test.log
+.DS_Store
