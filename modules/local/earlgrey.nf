@@ -1,8 +1,9 @@
 process EARLGREY {
     label 'process_medium'
     tag "$species"
-    container = 'quay.io/biocontainers/earlgrey:4.2.4--h4ac6f70_0'
-    
+    container = 'tobybaril/earlgrey_dfam3.7:latest'
+    containerOptions '-v `pwd`:/data/'
+    //tobybaril/earlgrey_dfam3.7:latest
     input:
     tuple val(species), path(genome)
 
@@ -16,7 +17,9 @@ process EARLGREY {
        gunzip *.gz
     fi
 
-    earlGrey -g $genome -s $species -o earlgreyresults.tsv
+    awk '/^>/ { print (NR==1 ? "" : RS) \$0; next } { printf "%s", \$0 } END { printf RS }' $genome > genome_line_removal.fasta
+
+    earlGrey -g genome_line_removal.fasta -s $species -o earlgreyresults.tsv -t 4
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
