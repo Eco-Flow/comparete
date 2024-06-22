@@ -1,23 +1,28 @@
 process EARLGREY {
     label 'process_medium'
     tag "$species"
-    container = 'tobybaril/earlgrey_dfam3.7:latest'
-    containerOptions '-v `pwd`:/data/'
-    //tobybaril/earlgrey_dfam3.7:latest
+    container = 'quay.io/ecoflowucl/earlgrey:v1.2'
+    //containerOptions '-v `pwd`:/workspace'
     input:
     tuple val(species), path(genome)
 
     output:
-    path("earlgreyresults.tsv") , emit: te_results
+    path("earlgreyresults.tsv"), emit: te_results
     path("versions.yml"), emit: versions
 
     script:
     """
+    #conda create -n earlgrey -c conda-forge -c bioconda earlgrey=4.2.4
+
     if [ -f *.gz ]; then
        gunzip *.gz
     fi
 
     awk '/^>/ { print (NR==1 ? "" : RS) \$0; next } { printf "%s", \$0 } END { printf RS }' $genome > genome_line_removal.fasta
+
+    #ls /opt/conda/envs/myenv/bin/
+
+    PATH=$PATH:/opt/conda/envs/myenv/bin/
 
     earlGrey -g genome_line_removal.fasta -s $species -o earlgreyresults.tsv -t 4
 
