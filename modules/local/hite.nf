@@ -8,7 +8,7 @@ process HITE {
     tuple val(species), path(genome)
 
     output:
-    path("${sample_id}_hite_results") , emit: hite_results
+    path("${species}_hite_results") , emit: hite_results
     path("versions.yml"), emit: versions
 
     script:
@@ -21,10 +21,10 @@ process HITE {
     mydir=`pwd`
 
     # Create the output directory
-    mkdir -p \${mydir}/${sample_id}_hite_results
+    mkdir -p \${mydir}/${species}_hite_results
 
     cd /HiTE
 
-    python main.py --genome /HiTE/demo/genome.fa --outdir \${mydir}/${sample_id}_hite_results
+    python main.py --genome /HiTE/demo/genome.fa --outdir \${mydir}/${species}_hite_results
     """
 }
