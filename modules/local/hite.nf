@@ -2,6 +2,7 @@ process HITE {
     label 'process_medium'
     tag "$species"
     container = 'kanghu/hite:3.2.0'
+    //containerOptions '-v `pwd`:`pwd`'
     
     input:
     tuple val(species), path(genome)
@@ -16,15 +17,16 @@ process HITE {
        gunzip *.gz
     fi
 
-    ls
+    # Capture the current working directory
+    mydir=`pwd`
 
-    python /HiTE/main.py --genome $genome --thread ${task.cpus} --plant 0 --outdir hite_results.tsv --annotate 1
+    # Create the output directory
+    mkdir -p \${mydir}/hite_results
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        //To be completed once module is set up.
-        //Python version: \$(python --version | cut -f 2 -d " ")
-        //Orthofinder version: \$(orthofinder | grep version | cut -f 3 -d " ")
-    END_VERSIONS
+    cd /HiTE
+
+
+    python main.py --genome /HiTE/demo/genome.fa --outdir \${mydir}/hite_results
+
     """
 }
