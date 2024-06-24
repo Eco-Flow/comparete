@@ -1,7 +1,7 @@
 process ORTHOFINDER {
     label 'process_medium'
     label 'process_long'
-    container = 'ecoflowucl/orthofinder:2.5.5'
+    container = 'quay.io/ecoflowucl/orthofinder:2.5.5'
     
     input:
     path '*'
