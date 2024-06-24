@@ -1,7 +1,7 @@
 process GFFREAD {
     label 'process_single'
     tag "$sample_id"
-    container = 'ecoflowucl/gffread_python:python-3.11.9_Linux_x86_64_perl-5.36.0'
+    container = 'quay.io/ecoflowucl/gffread_python:python-3.11.9_Linux_x86_64_perl-5.36.0'
 
     input:
     tuple val(sample_id), path(fasta), path(gff)
