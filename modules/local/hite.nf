@@ -1,5 +1,6 @@
 process HITE {
-    label 'process_medium'
+    label 'process_single'
+    label 'process_long'
     tag "$species"
     container = 'kanghu/hite:3.2.0'
     //containerOptions '-v `pwd`:`pwd`'
