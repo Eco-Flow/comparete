@@ -21,6 +21,7 @@ include { DOWNLOAD_NCBI } from './modules/local/download_ncbi.nf'
 include { GFFREAD } from './modules/local/gffread.nf'
 include { ORTHOFINDER } from './modules/local/orthofinder.nf'
 include { EARLGREY } from './modules/local/earlgrey.nf'
+include { HITE } from './modules/local/hite.nf'
 
 include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-validation'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -82,6 +83,12 @@ workflow {
    }
 
    //Only takes NCBI genomes, but later we need to add locally input genomes.
-   EARLGREY ( GFFREAD.out.just_genome )
+   if (params.earlgrey){
+      EARLGREY (GFFREAD.out.just_genome)
+   }
+
+   if (params.hite){
+      HITE (DOWNLOAD_NCBI.out.genome_only)
+   }
 
 }
