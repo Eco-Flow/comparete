@@ -10,7 +10,7 @@ process HITE {
 
     output:
     path("${species}_hite_results") , emit: hite_results
-    path("versions.yml"), emit: versions
+    //path("versions.yml"), emit: versions
 
     script:
     """
