@@ -10,3 +10,6 @@ results
 .nf-test
 .nf-test.log
 .DS_Store
+apptainer
+myriad.config
+input.csv

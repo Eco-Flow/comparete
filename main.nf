@@ -88,7 +88,7 @@ workflow {
    }
 
    if (params.hite){
-      HITE (DOWNLOAD_NCBI.out.genome_only)
+      HITE (GFFREAD.out.just_genome)
    }
 
 }

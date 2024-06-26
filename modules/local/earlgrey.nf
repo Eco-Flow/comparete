@@ -16,21 +16,16 @@ process EARLGREY {
 
     script:
     """
-    #conda create -n earlgrey -c conda-forge -c bioconda earlgrey=4.2.4
-
-    ls
-
+    # Unzip the genome and make sure it does not have internal new line characters. 
     if [ -f *.gz ]; then
-       gunzip $genome && mv genome.fna myunzip.fa
+       myunzip.fa=\$(gunzip -c "$genome")
        awk '/^>/ { print (NR==1 ? "" : RS) \$0; next } { printf "%s", \$0 } END { printf RS }' myunzip.fa > genome_line_removal.fasta
-       #rm myunzip.fa
     else
        awk '/^>/ { print (NR==1 ? "" : RS) \$0; next } { printf "%s", \$0 } END { printf RS }' $genome > genome_line_removal.fasta
-       #rm $genome
     fi
 
 
-
+    #Make sure earl grey scripts are in path
     PATH=$PATH:/opt/conda/envs/myenv/bin/
 
     # Capture the current working directory
@@ -39,6 +34,7 @@ process EARLGREY {
     # Create the output directory
     mkdir -p \${mydir}/${species}_earl_results
 
+    # Run earl grey non-interactively.
     yes | earlGrey -g genome_line_removal.fasta -s $species -o \${mydir}/${species}_earl_results -t 4
 
     #cat <<-END_VERSIONS > versions.yml
