@@ -1,6 +1,7 @@
 process EARLGREY {
-    label 'process_medium'
+    label 'process_low'
     label 'process_long'
+    label 'process_high_memory'
     tag "$species"
     //container = 'quay.io/biocontainers/earlgrey:4.2.4--h4ac6f70_0'
     container = 'tobybaril/earlgrey_dfam3.7:latest'
@@ -28,6 +29,10 @@ process EARLGREY {
 
     #Make sure earl grey scripts are in path
     PATH=$PATH:/opt/conda/envs/myenv/bin/
+
+    #Make sure perl modules are visible
+    export PERL5LIB=$PERL5LIB:/usr/local/lib/perl5/vendor_perl/File/
+    export PERL5LIB=$PERL5LIB:/usr/local/lib/perl5/vendor_perl/
 
     # Capture the current working directory
     mydir=`pwd`
