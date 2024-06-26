@@ -28,11 +28,11 @@ process EARLGREY {
 
 
     #Make sure earl grey scripts are in path
-    PATH=$PATH:/opt/conda/envs/myenv/bin/
+    PATH=\$PATH:/opt/conda/envs/myenv/bin/
 
     #Make sure perl modules are visible
-    export PERL5LIB=$PERL5LIB:/usr/local/lib/perl5/vendor_perl/File/
-    export PERL5LIB=$PERL5LIB:/usr/local/lib/perl5/vendor_perl/
+    export PERL5LIB=\$PERL5LIB:/usr/local/lib/perl5/vendor_perl/File/
+    export PERL5LIB=\$PERL5LIB:/usr/local/lib/perl5/vendor_perl/
 
     # Capture the current working directory
     mydir=`pwd`
