@@ -30,6 +30,9 @@ process EARLGREY {
     #Make sure earl grey scripts are in path
     PATH=\$PATH:/opt/conda/envs/myenv/bin/
 
+    # Initialize PERL5LIB if not already set
+    : \${PERL5LIB:=}
+
     #Make sure perl modules are visible
     export PERL5LIB=\$PERL5LIB:/usr/local/lib/perl5/vendor_perl/File/
     export PERL5LIB=\$PERL5LIB:/usr/local/lib/perl5/vendor_perl/
