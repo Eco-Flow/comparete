@@ -45,6 +45,20 @@ workflow {
       }
       .set { input_type }
 
+   twocol = input_type.ncbi
+
+   def fastaExtensions = ['.fa', '.fasta', '.fna', '.fa.gz', '.fasta.gz', '.fna.gz']
+
+   // Separate files into FASTA files and other files
+   genomeonly = twocol.filter { row ->
+      def filePath = row[1]  // assuming the file path is the second column
+      fastaExtensions.any { filePath.endsWith(it) }
+   }
+
+   refseqids = twocol.filter { row ->
+      def filePath = row[1]  // assuming the file path is the second column
+      !fastaExtensions.any { filePath.endsWith(it) }
+   }
 
    //Make a channel for version outputs:
    ch_versions = Channel.empty()
@@ -55,7 +69,7 @@ workflow {
    // Print summary of supplied parameters
    log.info paramsSummaryLog(workflow)
 
-   DOWNLOAD_NCBI ( input_type.ncbi )
+   DOWNLOAD_NCBI ( refseqids )
     ch_versions = ch_versions.mix(DOWNLOAD_NCBI.out.versions.first())
 
     //Checks if paths are S3 objects if not ensures absolute paths are used for user inputted fasta and gff files
@@ -84,11 +98,11 @@ workflow {
 
    //Only takes NCBI genomes, but later we need to add locally input genomes.
    if (params.earlgrey){
-      EARLGREY (GFFREAD.out.just_genome)
+      EARLGREY (GFFREAD.out.just_genome.mix(genomeonly))
    }
 
    if (params.hite){
-      HITE (GFFREAD.out.just_genome)
+      HITE (GFFREAD.out.just_genome.mix(genomeonly))
    }
-
+   
 }
