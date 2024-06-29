@@ -36,6 +36,10 @@ To run with all the different TE programs on a input csv file called `input.csv`
 
 `nextflow run main.nf --orthofinder --hite --earlgrey --input input.csv -profile docker/singularity/apptainer`
 
+## Useful additional flags:
+
+`-resume` : This allows the pipeline to resume from the last failed process (using the nextflow cache-ing mechanism)
+`-bg`     : This allows nextflow to run in the background, so you can continue to use your terminal.
 
 # Current test commands:
 `nextflow run main.nf -profile docker,test_bacteria -resume`
