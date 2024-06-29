@@ -26,7 +26,7 @@ See examples in `conf/test` (various example in config files)
 
 # Running the pipeline
 
-To run the pipeline you need to make a csv input file as described above with either Refseq IDs (these alwasy begin GCF_...), or with genomes, or genomes and annotation files.
+To run the pipeline you need to make a csv input file as described above with either Refseq IDs (these always begin GCF_...), or with genomes, or genomes and annotation files.
 
 To run with all the different TE programs on a input csv file called `input.csv`:
 
