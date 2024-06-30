@@ -1,6 +1,5 @@
 process EARLGREY {
-    label 'process_high'
-    label 'process_48h'
+    label 'cam'
     tag "$species"
     //container = 'quay.io/biocontainers/earlgrey:4.2.4--h4ac6f70_0'
     container = 'tobybaril/earlgrey_dfam3.7:latest'
