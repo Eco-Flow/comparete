@@ -1,4 +1,4 @@
-# CompareTe
+# CompareTE
 A pipeline to compare TE content across genomes using various platforms.
 
 
