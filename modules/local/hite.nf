@@ -27,7 +27,7 @@ process HITE {
 
     cd /HiTE
 
-    python main.py --genome /HiTE/demo/genome.fa --outdir \${mydir}/${species}_hite_results
+    python main.py --genome ${genome} --outdir \${mydir}/${species}_hite_results
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
