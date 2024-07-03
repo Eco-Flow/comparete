@@ -4,6 +4,7 @@ process HITE {
     tag "$species"
     container = 'kanghu/hite:3.2.0'
     stageInMode = 'copy'
+    containerOptions = '-v `pwd`:`pwd`'
     
     input:
     tuple val(species), path(genome)
@@ -40,11 +41,11 @@ process HITE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-       Python version: \$(python --version | cut -f 2 -d " ")
-        HiTE version: 3.2.0
-       Repeat Masker version: \$(RepeatMasker | grep version | cut -f 3 -d " ")
-       Repeat Modeler version: \$(RepeatModeler | grep /opt/conda/envs/HiTE/share/RepeatModeler/RepeatModeler | cut -f 3 -d " ")
-        LTRPipeline version: \$(LTRPipeline -version)
+      Python version: \$(python --version | cut -f 2 -d " ")
+      HiTE version: 3.2.0
+      Repeat Masker version: \$(RepeatMasker | grep version | cut -f 3 -d " ")
+      Repeat Modeler version: \$(RepeatModeler | grep /opt/conda/envs/HiTE/share/RepeatModeler/RepeatModeler | cut -f 3 -d " ")
+      LTRPipeline version: \$(LTRPipeline -version)
     END_VERSIONS
     """
 }
