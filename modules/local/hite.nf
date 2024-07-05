@@ -34,7 +34,7 @@ process HITE {
     cd /HiTE
 
 
-    python main.py --genome \${newpath} --outdir \${mydir}/${species}_hite_results --thread ${task.cpus}
+    python main.py --genome \${newpath} --outdir \${mydir}/${species}_hite_results --thread ${task.cpus} --annotate 1
 
     cd \${mydir}/${species}_hite_results/
 
