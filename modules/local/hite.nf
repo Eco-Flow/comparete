@@ -10,7 +10,7 @@ process HITE {
 
     output:
     path("${species}_hite_results") , emit: hite_results
-    path("versions.yml"), emit: versions
+    //path("versions.yml"), emit: versions
 
     script:
     """
@@ -38,13 +38,6 @@ process HITE {
 
     cd \${mydir}/${species}_hite_results/
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-       Python version: \$(python --version | cut -f 2 -d " ")
-        HiTE version: 3.2.0
-       Repeat Masker version: \$(RepeatMasker | grep version | cut -f 3 -d " ")
-       Repeat Modeler version: \$(RepeatModeler | grep /opt/conda/envs/HiTE/share/RepeatModeler/RepeatModeler | cut -f 3 -d " ")
-        LTRPipeline version: \$(LTRPipeline -version)
-    END_VERSIONS
+    
     """
 }
