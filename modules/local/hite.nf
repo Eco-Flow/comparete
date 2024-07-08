@@ -4,7 +4,6 @@ process HITE {
     tag "$species"
     container = 'kanghu/hite:3.2.0'
     stageInMode = 'copy'
-    containerOptions = '-v `pwd`:`pwd`'
     
     input:
     tuple val(species), path(genome)
