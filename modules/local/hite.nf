@@ -4,6 +4,7 @@ process HITE {
     tag "$species"
     container = 'kanghu/hite:3.2.0'
     stageInMode = 'copy'
+    containerOptions = '-v `pwd`:`pwd`'
     
     input:
     tuple val(species), path(genome)
@@ -37,7 +38,6 @@ process HITE {
     python main.py --genome \${newpath} --outdir \${mydir}/${species}_hite_results --thread ${task.cpus} --annotate 1
 
     cd \${mydir}/${species}_hite_results/
-
     
     """
 }
