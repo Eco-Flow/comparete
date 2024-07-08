@@ -1,7 +1,6 @@
 # CompareTE
 A pipeline to compare TE content across genomes using various platforms.
 
-
 # Input
 
 Input should be a csv file (ending in `.csv`). 
@@ -51,6 +50,10 @@ To run test data with HITE:
 To run test data with EARL GREY:
 
 `nextflow run main.nf -profile docker,test_drosophila -resume --earlgrey --clean false`
+
+Or on gitpod:
+
+`nextflow run main.nf -profile docker,test_drosophila,gitpod -resume --earlgrey --clean false`
 
 To run orthofinder on your input species:
 
