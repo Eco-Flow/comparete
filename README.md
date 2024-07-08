@@ -42,19 +42,19 @@ To run with all the different TE programs on a input csv file called `input.csv`
 `-bg`     : This allows nextflow to run in the background, so you can continue to use your terminal.
 
 # Current test commands:
-`nextflow run main.nf -profile docker,test_bacteria -resume`
+`nextflow run main.nf -profile docker,test_drosophila -resume`
 
-To run with HITE:
+To run test data with HITE:
 
-`nextflow run main.nf -profile docker,test_bacteria -resume --hite`
+`nextflow run main.nf -profile docker,test_drosophila -resume --hite --clean false`
 
-To run with EARL GREY:
+To run test data with EARL GREY:
 
-`nextflow run main.nf -profile docker,test_bacteria -resume --earlgrey`
+`nextflow run main.nf -profile docker,test_drosophila -resume --earlgrey --clean false`
 
 To run orthofinder on your input species:
 
-`nextflow run main.nf -profile docker,test_bacteria -resume --orthofinder`
+`nextflow run main.nf -profile docker,test_drosophila -resume --orthofinder`
 
 # Test a docker container:
 `docker run -it --volume $PWD:$PWD <container> bash`
