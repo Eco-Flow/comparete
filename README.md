@@ -1,6 +1,9 @@
 # CompareTE
 A pipeline to compare TE content across genomes using various platforms.
 
+**Important!,**
+If you use EarlGrey in your work, please use their reference.
+If you use HiTE in your work, please use their reference.
 
 # Input
 
@@ -58,3 +61,16 @@ To run orthofinder on your input species:
 
 # Test a docker container:
 `docker run -it --volume $PWD:$PWD <container> bash`
+
+
+# References
+
+**EarlGrey:**
+
+Baril, T., Galbraith, J.G., and Hayward, A., Earl Grey: A Fully Automated User-Friendly Transposable Element Annotation and Analysis Pipeline, Molecular Biology and Evolution, Volume 41, Issue 4, April 2024, msae068 doi:10.1093/molbev/msae068
+
+Baril, Tobias., Galbraith, James., and Hayward, Alexander. (2023) Earl Grey. Zenodo doi:10.5281/zenodo.5654615
+
+**HiTE:**
+
+Hu, K., Ni, P., Xu, M. et al. HiTE: a fast and accurate dynamic boundary adjustment approach for full-length transposable element detection and annotation. Nat Commun 15, 5573 (2024).
