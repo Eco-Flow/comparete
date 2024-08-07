@@ -10,9 +10,11 @@ It should contain either:
 
 ```
 name,refseqID
-name,/path/to/genome.fa 
-name,/path/to/genome.fa,/path/to/annotation.gff
+name,/full/path/to/genome.fa 
+name,/full/path/to/genome.fa,/full/path/to/annotation.gff
 ```
+
+**!! Do not use relative paths !!**
 
 The genome must end with:
 
