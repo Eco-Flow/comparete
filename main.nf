@@ -9,7 +9,7 @@ log.info """\
 
  Authors:
    - Chris Wyatt <c.wyatt@ucl.ac.uk>
-   - Rahia Mashoodh <>
+   - Rahia Mashoodh <r.mashoodh@ucl.ac.uk>
 
  -----------------------------------------
 
