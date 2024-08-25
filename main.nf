@@ -19,7 +19,7 @@ log.info """\
 
 include { DOWNLOAD_NCBI } from './modules/local/download_ncbi.nf'
 include { GFFREAD } from './modules/local/gffread.nf'
-include { ORTHOFINDER } from './modules/local/orthofinder.nf'
+include { ORTHOFINDER } from './modules/nf-core/orthofinder/main.nf'
 include { EARLGREY } from './modules/local/earlgrey.nf'
 include { HITE } from './modules/local/hite.nf'
 
@@ -90,9 +90,20 @@ workflow {
 
    merge_ch = GFFREAD.out.longest.collect()
 
+
+   merge_ch.subscribe { files ->
+      println "Collected files: ${files}"
+   }
+
+   meta_id = [id: 'orthofinder']
+
+   meta_files_ch = merge_ch.map { files ->
+      tuple(meta_id, files)
+   }
+
    if (params.orthofinder){
 
-      ORTHOFINDER ( merge_ch )
+      ORTHOFINDER ( meta_files_ch , [] )
 
    }
 
