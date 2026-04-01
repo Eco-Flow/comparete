@@ -2,7 +2,7 @@ process HITE {
     label 'process_single'
     label 'process_long'
     tag "$species"
-    container = 'kanghu/hite:3.2.0'
+    container = 'kanghu/hite:3.3.3'
     stageInMode = 'copy'
     
     input:
@@ -34,14 +34,15 @@ process HITE {
     cd /HiTE
 
 
-    python main.py --genome \${newpath} --outdir \${mydir}/${species}_hite_results --thread ${task.cpus}
+    python main.py --work_dir \${mydir} --genome \${newpath} --out_dir \${mydir}/${species}_hite_results --thread ${task.cpus} --annotate 1 --plant 0
 
     cd \${mydir}/${species}_hite_results/
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > \${mydir}/versions.yml
+
     "${task.process}":
        Python version: \$(python --version | cut -f 2 -d " ")
-        HiTE version: 3.2.0
+        HiTE version: 3.3.3
        Repeat Masker version: \$(RepeatMasker | grep version | cut -f 3 -d " ")
        Repeat Modeler version: \$(RepeatModeler | grep /opt/conda/envs/HiTE/share/RepeatModeler/RepeatModeler | cut -f 3 -d " ")
         LTRPipeline version: \$(LTRPipeline -version)
