@@ -2,7 +2,7 @@ process HITE {
     label 'process_single'
     label 'process_long'
     tag "$species"
-    container = 'kanghu/hite:3.3.3'
+    container 'kanghu/hite:3.3.3'
     stageInMode = 'copy'
     
     input:
