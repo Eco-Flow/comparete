@@ -21,3 +21,4 @@ RUN curl -fsSL https://code.askimed.com/install/nf-test | bash || true
 # Ensure /usr/local/bin is on PATH
 ENV PATH="/usr/local/bin:${PATH}"
 ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+ENV DOCKER_API_VERSION=1.43
