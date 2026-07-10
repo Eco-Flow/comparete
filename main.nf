@@ -1,33 +1,37 @@
 #!/usr/bin/env nextflow
 
-log.info """\
- =========================================
-
- COMPARE TE (v1.0)
-
- -----------------------------------------
-
- Authors:
-   - Chris Wyatt <c.wyatt@ucl.ac.uk>
-   - Rahia Mashoodh <>
-
- -----------------------------------------
-
- Copyright (c) 2024
-
- =========================================""".stripIndent()
-
 include { DOWNLOAD_NCBI } from './modules/local/download_ncbi.nf'
 include { GFFREAD } from './modules/local/gffread.nf'
 include { ORTHOFINDER } from './modules/local/orthofinder.nf'
 include { EARLGREY } from './modules/local/earlgrey.nf'
 include { HITE } from './modules/local/hite.nf'
 
-include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-validation'
+include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-schema'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 
+def errorMessage() {
+   log.error "Please provide an input CSV file with --input"
+   exit 1
+}
 
 workflow {
+
+   log.info """\
+    =========================================
+
+    COMPARE TE (v1.0)
+
+    -----------------------------------------
+
+    Authors:
+      - Chris Wyatt <c.wyatt@ucl.ac.uk>
+      - Rahia Mashoodh <>
+
+    -----------------------------------------
+
+    Copyright (c) 2024
+
+    =========================================""".stripIndent()
 
    if (params.help) {
       log.info paramsHelp("nextflow run main.nf --input input_file.csv")
@@ -73,7 +77,13 @@ workflow {
     ch_versions = ch_versions.mix(DOWNLOAD_NCBI.out.versions.first())
 
     //Checks if paths are S3 objects if not ensures absolute paths are used for user inputted fasta and gff files
-    input_type.path.map{ name, fasta , gff -> if (fasta =~ /^s3/ ) { full_fasta = fasta } else { full_fasta = new File(fasta).getAbsolutePath()}; if (gff =~ /^s3/) { full_gff = gff } else { full_gff = new File(gff).getAbsolutePath()}; [name, full_fasta, full_gff] }.set{ local_full_tuple }
+    input_type.path
+       .map { name, fasta, gff ->
+          def full_fasta = fasta =~ /^s3/ ? fasta : new File(fasta).getAbsolutePath()
+          def full_gff   = gff =~ /^s3/ ? gff : new File(gff).getAbsolutePath()
+          [name, full_fasta, full_gff]
+       }
+       .set { local_full_tuple }
 
     //Split channel into 2, keep tuple the same for gffread and take just sample id and fasta for fastavalidator
     DOWNLOAD_NCBI.out.genome.mix(local_full_tuple)
