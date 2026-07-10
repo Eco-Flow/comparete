@@ -2,12 +2,12 @@ process EARLGREY {
     label 'process_high_memory'
     tag "$species"
     //container = 'quay.io/biocontainers/earlgrey:4.2.4--h4ac6f70_0'
-    //container 'tobybaril/earlgrey_dfam3.7:latest'
-    container 'community.wave.seqera.io/library/earlgrey_bc:3bcfd882bf14ba88'
-    //containerOptions '-v `pwd`:/data/'
-    // Bind-mount a user-supplied Dfam famdb over the location RepeatMasker expects.
-    // The container does not ship the full Dfam partitions, so --famdb must point
-    // at a directory containing them (e.g. dfam3x_full.N.h5 files).
+    // The official Earl Grey image ships a fully-configured RepeatMasker (Dfam 3.7 +
+    // built RepeatMasker.lib). Wave (enabled globally) augments this Docker image into
+    // a pullable, Singularity-ready container without stripping its bundled databases.
+    container 'tobybaril/earlgrey_dfam3.7:latest'
+    // Optional: bind-mount a newer Dfam famdb over the bundled one. Leave --famdb unset
+    // to use the container's built-in Dfam 3.7 (recommended, keeps library consistency).
     containerOptions { params.famdb ? "-B ${params.famdb}:/opt/conda/share/RepeatMasker/Libraries/famdb" : '' }
     //stageInMode = 'copy'
 

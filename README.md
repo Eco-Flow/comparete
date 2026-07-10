@@ -43,11 +43,15 @@ To run with all the different TE programs on a input csv file called `input.csv`
 
 ## Earl Grey and the Dfam database (`--famdb`)
 
-Earl Grey uses RepeatMasker, which needs the Dfam database. The Earl Grey container does **not** ship the full Dfam partitions, so when running `--earlgrey` you must provide a Dfam famdb directory:
+Earl Grey runs from the `tobybaril/earlgrey_dfam3.7` container, which already ships a fully-configured RepeatMasker with Dfam 3.7. So in most cases you just run:
 
-`nextflow run main.nf --earlgrey --famdb /path/to/famdb --input input.csv -profile singularity`
+`nextflow run main.nf --earlgrey --input input.csv -profile singularity`
 
-`--famdb` should point at a directory containing the Dfam famdb partitions (e.g. `dfam3x_full.N.h5` files). It is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`. Running `--earlgrey` without `--famdb` exits early with an error.
+If you want to use a **newer Dfam release**, pass `--famdb` pointing at a directory containing the famdb partitions (e.g. `dfam39_full.N.h5` files):
+
+`nextflow run main.nf --earlgrey --famdb /path/to/dfam39 --input input.csv -profile singularity`
+
+`--famdb` is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`, overriding the bundled Dfam. Note this replaces only the famdb, not the container's prebuilt RepeatMasker library, so a mismatched Dfam version may cause issues — the bundled Dfam 3.7 is the safest default.
 
 ## HPC cluster profiles
 

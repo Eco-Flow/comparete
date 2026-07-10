@@ -71,8 +71,8 @@
         "famdb": {
           "type": "string",
           "format": "directory-path",
-          "description": "Path to a Dfam famdb directory for Earl Grey / RepeatMasker.",
-          "help_text": "The Earl Grey container does not ship the full Dfam database. When running `--earlgrey`, point this at a directory containing the Dfam famdb partitions (e.g. `dfam3x_full.N.h5` files). It is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`.",
+          "description": "Optional Dfam famdb directory to override the one bundled in the Earl Grey container.",
+          "help_text": "The Earl Grey container already ships a configured Dfam 3.7 database, so this is not required. To use a newer Dfam release, point this at a directory containing the famdb partitions (e.g. `dfam39_full.N.h5` files); it is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`. Note that overriding only the famdb can cause version mismatches with the container's prebuilt RepeatMasker library.",
           "fa_icon": "fas fa-database"
         }
       }
