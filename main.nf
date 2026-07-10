@@ -6,6 +6,7 @@ include { ORTHOFINDER } from './modules/local/orthofinder.nf'
 include { EARLGREY } from './modules/local/earlgrey.nf'
 include { HITE } from './modules/local/hite.nf'
 include { COMPARE_TE } from './modules/local/compare_te.nf'
+include { COMBINE_TE } from './modules/local/combine_te.nf'
 
 include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-schema'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -127,6 +128,12 @@ workflow {
    // HiTE outputs plus the genome (for total-size / percentage calculations).
    if (params.earlgrey && params.hite){
       COMPARE_TE ( ch_earlgrey.join(ch_hite).join(ch_te_genome) )
+
+      // Merge the per-species comparisons into one combined table and figure.
+      COMBINE_TE (
+         COMPARE_TE.out.table.map { sp -> sp[1] }.collect(),
+         COMPARE_TE.out.table_by_class.map { sp -> sp[1] }.collect()
+      )
    }
 
 }

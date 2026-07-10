@@ -61,6 +61,11 @@ When both `--earlgrey` and `--hite` are supplied, the pipeline runs a `COMPARE_T
 - `<species>_te_comparison_by_class.tsv` — per-class breakdown side by side.
 - `<species>_te_comparison.pdf` — a totals bar chart and a per-class grouped bar chart.
 
+A final `COMBINE_TE` step then merges all species into combined outputs (also in `results/compare_te/`):
+
+- `combined_te_totals.tsv` / `combined_te_by_class.tsv` — all species and both tools in one table.
+- `combined_te_comparison.pdf` — a cross-species totals bar chart and a per-class figure faceted by species.
+
 `nextflow run main.nf --earlgrey --hite --famdb ... --input input.csv -profile singularity`
 
 ## HPC cluster profiles
