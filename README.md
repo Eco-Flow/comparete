@@ -41,6 +41,26 @@ To run with all the different TE programs on a input csv file called `input.csv`
 
 `nextflow run main.nf --orthofinder --hite --earlgrey --input input.csv -profile docker/singularity/apptainer`
 
+## HPC cluster profiles
+
+Bundled institutional profiles configure the scheduler, container engine, and resource limits for a specific cluster. They already enable the right container engine, so you do **not** need to add `-profile singularity` or an external `-c` config.
+
+| Profile | Cluster | Scheduler | Container |
+| --- | --- | --- | --- |
+| `ucl_myriad` | UCL Myriad | SGE | Singularity/Apptainer |
+| `cambridge` | University of Cambridge CSD3 | SLURM | Singularity |
+
+Combine an HPC profile with a test or input profile, e.g. on UCL Myriad:
+
+`nextflow run main.nf -profile ucl_myriad,test_bacteria -resume --hite`
+
+On Cambridge CSD3, export your SLURM project/account first (defaults to the `icelake` partition):
+
+```
+export NXF_CAMBRIDGE_PROJECT=MYPROJECT-SL2-CPU
+nextflow run main.nf -profile cambridge,test_bacteria -resume --hite
+```
+
 ## Useful additional flags:
 
 `-resume` : This allows the pipeline to resume from the last failed process (using the nextflow cache-ing mechanism)
