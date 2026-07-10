@@ -40,6 +40,12 @@ process EARLGREY {
     export PERL5LIB=\$PERL5LIB:/usr/local/lib/perl5/vendor_perl/File/
     export PERL5LIB=\$PERL5LIB:/usr/local/lib/perl5/vendor_perl/
 
+    # Cap OpenBLAS threads to avoid 'blas_thread_init: pthread_create failed'
+    # crashes on HPC nodes with tight process/ulimit settings, which can silently
+    # corrupt repeat percentages (see Earl Grey README). Earl Grey parallelises via
+    # its own -t option, so limiting BLAS threads does not slow the pipeline.
+    export OPENBLAS_NUM_THREADS=1
+
     # Capture the current working directory
     mydir=`pwd`
 
