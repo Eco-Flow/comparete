@@ -53,6 +53,16 @@ If you want to use a **newer Dfam release**, pass `--famdb` pointing at a direct
 
 `--famdb` is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`, overriding the bundled Dfam. Note this replaces only the famdb, not the container's prebuilt RepeatMasker library, so a mismatched Dfam version may cause issues — the bundled Dfam 3.7 is the safest default.
 
+## Comparing Earl Grey and HiTE (`COMPARE_TE`)
+
+When both `--earlgrey` and `--hite` are supplied, the pipeline runs a `COMPARE_TE` step per species that combines the two tools' transposable-element annotations. It parses Earl Grey's `filteredRepeats.gff` and HiTE's RepeatMasker `.out`, maps both tools' classifications to common high-level TE classes (DNA, LTR, LINE, SINE, Penelope, RC/Helitron, Other/Simple, Unclassified), and writes to `results/compare_te/`:
+
+- `<species>_te_comparison.tsv` — total TE bp, copy number, and % genome per tool.
+- `<species>_te_comparison_by_class.tsv` — per-class breakdown side by side.
+- `<species>_te_comparison.pdf` — a totals bar chart and a per-class grouped bar chart.
+
+`nextflow run main.nf --earlgrey --hite --famdb ... --input input.csv -profile singularity`
+
 ## HPC cluster profiles
 
 Bundled institutional profiles configure the scheduler, container engine, and resource limits for a specific cluster. They already enable the right container engine, so you do **not** need to add `-profile singularity` or an external `-c` config.

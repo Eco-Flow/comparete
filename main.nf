@@ -5,6 +5,7 @@ include { GFFREAD } from './modules/local/gffread.nf'
 include { ORTHOFINDER } from './modules/local/orthofinder.nf'
 include { EARLGREY } from './modules/local/earlgrey.nf'
 include { HITE } from './modules/local/hite.nf'
+include { COMPARE_TE } from './modules/local/compare_te.nf'
 
 include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-schema'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -107,12 +108,25 @@ workflow {
    }
 
    //Only takes NCBI genomes, but later we need to add locally input genomes.
+   ch_te_genome = GFFREAD.out.just_genome.mix(genomeonly)
+
+   ch_earlgrey = Channel.empty()
    if (params.earlgrey){
-      EARLGREY (GFFREAD.out.just_genome.mix(genomeonly))
+      EARLGREY (ch_te_genome)
+      ch_earlgrey = EARLGREY.out.te_results
    }
 
+   ch_hite = Channel.empty()
    if (params.hite){
-      HITE (GFFREAD.out.just_genome.mix(genomeonly))
+      HITE (ch_te_genome)
+      ch_hite = HITE.out.hite_results
    }
-   
+
+   // When both TE annotators have run, combine their results per species.
+   // Join keyed on species so each COMPARE_TE gets the matching Earl Grey and
+   // HiTE outputs plus the genome (for total-size / percentage calculations).
+   if (params.earlgrey && params.hite){
+      COMPARE_TE ( ch_earlgrey.join(ch_hite).join(ch_te_genome) )
+   }
+
 }

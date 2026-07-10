@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0 - [2026-07-10]
+
+### Added
+
+- New `COMPARE_TE` module that combines Earl Grey and HiTE annotations per species when both `--earlgrey` and `--hite` are set. Parses Earl Grey's `filteredRepeats.gff` and HiTE's RepeatMasker `.out`, maps both to common high-level TE classes, and writes a totals table, a per-class table, and a comparison figure to `results/compare_te/`.
+- `EARLGREY` and `HITE` now emit species-keyed tuples so their outputs can be joined.
+
 ## v1.0.6 - [2026-07-10]
 
 ### Added

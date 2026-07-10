@@ -9,7 +9,7 @@ process HITE {
     tuple val(species), path(genome)
 
     output:
-    path("${species}_hite_results") , emit: hite_results
+    tuple val(species), path("${species}_hite_results"), emit: hite_results
     path("versions.yml"), emit: versions
 
     script:

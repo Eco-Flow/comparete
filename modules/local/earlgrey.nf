@@ -15,7 +15,7 @@ process EARLGREY {
     tuple val(species), path(genome)
 
     output:
-    path("${species}_earl_results"), emit: te_results
+    tuple val(species), path("${species}_earl_results"), emit: te_results
     path("versions.yml"), emit: versions
 
     script:
