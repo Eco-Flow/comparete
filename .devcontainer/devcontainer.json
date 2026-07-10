@@ -13,6 +13,7 @@
   "runArgs": [
     "--mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"
   ],
+  "remoteUser": "root",
   "postCreateCommand": "nextflow info || true",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"

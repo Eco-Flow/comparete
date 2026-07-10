@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     docker.io \
     && rm -rf /var/lib/apt/lists/*
 
+RUN usermod -aG docker vscode || true
+
 # Install Nextflow
 RUN curl -s https://get.nextflow.io | bash && mv nextflow /usr/local/bin/nextflow
 
