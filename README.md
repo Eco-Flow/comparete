@@ -41,6 +41,14 @@ To run with all the different TE programs on a input csv file called `input.csv`
 
 `nextflow run main.nf --orthofinder --hite --earlgrey --input input.csv -profile docker/singularity/apptainer`
 
+## Earl Grey and the Dfam database (`--famdb`)
+
+Earl Grey uses RepeatMasker, which needs the Dfam database. The Earl Grey container does **not** ship the full Dfam partitions, so when running `--earlgrey` you must provide a Dfam famdb directory:
+
+`nextflow run main.nf --earlgrey --famdb /path/to/famdb --input input.csv -profile singularity`
+
+`--famdb` should point at a directory containing the Dfam famdb partitions (e.g. `dfam3x_full.N.h5` files). It is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`. Running `--earlgrey` without `--famdb` exits early with an error.
+
 ## HPC cluster profiles
 
 Bundled institutional profiles configure the scheduler, container engine, and resource limits for a specific cluster. They already enable the right container engine, so you do **not** need to add `-profile singularity` or an external `-c` config.
