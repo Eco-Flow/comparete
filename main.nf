@@ -108,6 +108,10 @@ workflow {
 
    //Only takes NCBI genomes, but later we need to add locally input genomes.
    if (params.earlgrey){
+      if (params.famdb == null) {
+         log.error "Earl Grey requires a Dfam famdb. Provide one with --famdb /path/to/famdb (a directory containing the Dfam .h5 partitions)."
+         exit 1
+      }
       EARLGREY (GFFREAD.out.just_genome.mix(genomeonly))
    }
 

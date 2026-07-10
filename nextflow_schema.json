@@ -67,6 +67,13 @@
           "format": "path",
           "description": "Path to pre-downloaded GO annotation files, bypassing the download step.",
           "fa_icon": "fas fa-file"
+        },
+        "famdb": {
+          "type": "string",
+          "format": "directory-path",
+          "description": "Path to a Dfam famdb directory for Earl Grey / RepeatMasker.",
+          "help_text": "The Earl Grey container does not ship the full Dfam database. When running `--earlgrey`, point this at a directory containing the Dfam famdb partitions (e.g. `dfam3x_full.N.h5` files). It is bind-mounted into the container at `/opt/conda/share/RepeatMasker/Libraries/famdb`.",
+          "fa_icon": "fas fa-database"
         }
       }
     },

@@ -4,8 +4,11 @@ process EARLGREY {
     //container = 'quay.io/biocontainers/earlgrey:4.2.4--h4ac6f70_0'
     //container 'tobybaril/earlgrey_dfam3.7:latest'
     container 'community.wave.seqera.io/library/earlgrey_bc:3bcfd882bf14ba88'
-
     //containerOptions '-v `pwd`:/data/'
+    // Bind-mount a user-supplied Dfam famdb over the location RepeatMasker expects.
+    // The container does not ship the full Dfam partitions, so --famdb must point
+    // at a directory containing them (e.g. dfam3x_full.N.h5 files).
+    containerOptions { params.famdb ? "-B ${params.famdb}:/opt/conda/share/RepeatMasker/Libraries/famdb" : '' }
     //stageInMode = 'copy'
 
     input:
