@@ -3,7 +3,7 @@ process HITE {
     label 'process_long'
     tag "$species"
     container 'kanghu/hite:3.3.3'
-    stageInMode = 'copy'
+    stageInMode 'copy'
     
     input:
     tuple val(species), path(genome)
