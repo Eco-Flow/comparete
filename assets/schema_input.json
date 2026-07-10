@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/comparete/comparete/master/assets/schema_input.json",
+  "title": "comparete pipeline - params.input schema",
+  "description": "Schema for the file provided with params.input",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "pattern": "^\\S+$",
+        "errorMessage": "Genome name must be provided and cannot contain spaces",
+        "meta": ["id"]
+      },
+      "fasta": {
+        "type": "string",
+        "format": "file-path",
+        "pattern": "^\\S+\\.(fa|fasta|fna)(\\.gz)?$|^\\S+$",
+        "errorMessage": "Second column must be either a genome FASTA (.fa/.fasta/.fna, optionally gzipped) or an NCBI accession"
+      },
+      "gff": {
+        "type": "string",
+        "format": "file-path",
+        "pattern": "^\\S+\\.gff(3)?(\\.gz)?$",
+        "errorMessage": "GFF file, when provided, must have extension .gff/.gff3 (optionally gzipped)"
+      }
+    },
+    "required": ["name", "fasta"]
+  }
+}
