@@ -180,6 +180,24 @@
           "description": "Suffix to add to the trace report filename. Default is the date and time in yyyy-MM-dd_HH-mm-ss format.",
           "fa_icon": "fas fa-clock",
           "hidden": true
+        },
+        "config_profile_description": {
+          "type": "string",
+          "description": "Description of the institutional config profile.",
+          "fa_icon": "fas fa-users-cog",
+          "hidden": true
+        },
+        "config_profile_contact": {
+          "type": "string",
+          "description": "Contact person for the institutional config profile.",
+          "fa_icon": "fas fa-users-cog",
+          "hidden": true
+        },
+        "config_profile_url": {
+          "type": "string",
+          "description": "URL with documentation for the institutional config profile.",
+          "fa_icon": "fas fa-users-cog",
+          "hidden": true
         }
       }
     }
