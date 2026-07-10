@@ -1,0 +1,17 @@
+{
+  "name": "CompareTE Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "postCreateCommand": "nextflow info || true",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  }
+}
