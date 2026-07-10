@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     ca-certificates \
     openjdk-17-jre-headless \
+    docker.io \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Nextflow
