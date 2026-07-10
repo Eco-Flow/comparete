@@ -34,7 +34,7 @@ workflow {
     =========================================""".stripIndent()
 
    if (params.help) {
-      log.info paramsHelp("nextflow run main.nf --input input_file.csv")
+      log.info paramsHelp(command: "nextflow run main.nf --input input_file.csv")
       exit 0
    }
 
@@ -67,8 +67,8 @@ workflow {
    //Make a channel for version outputs:
    ch_versions = Channel.empty()
 
-   // Validate input parameters --- ##need to add with nf-core schema build. !
-   //validateParameters()
+   // Validate input parameters against nextflow_schema.json
+   validateParameters()
 
    // Print summary of supplied parameters
    log.info paramsSummaryLog(workflow)

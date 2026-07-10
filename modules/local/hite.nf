@@ -38,6 +38,15 @@ process HITE {
 
     cd \${mydir}/${species}_hite_results/
 
+    # Prefix HiTE output files with the species name (if not already prefixed)
+    for f in HiTE*; do
+      [ -e "\$f" ] || continue
+      case "\$f" in
+        ${species}_*) ;;
+        *) mv "\$f" "${species}_\$f" ;;
+      esac
+    done
+
     cat <<-END_VERSIONS > \${mydir}/versions.yml
 
     "${task.process}":

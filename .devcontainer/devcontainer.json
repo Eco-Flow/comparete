@@ -1,0 +1,24 @@
+{
+  "name": "CompareTE Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "runArgs": [
+    "--mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock"
+  ],
+  "containerEnv": {
+    "DOCKER_API_VERSION": "1.43"
+  },
+  "remoteUser": "root",
+  "postCreateCommand": "nextflow info || true",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  }
+}
