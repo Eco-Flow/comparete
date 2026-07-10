@@ -15,10 +15,11 @@ process COMPARE_TE {
     script:
     """
     # Compute genome size (bp) by streaming the FASTA, handling optional gzip.
-    if [ "${genome}" != "\${genome%.gz}" ]; then
-        genome_size=\$(zcat ${genome} | grep -v '^>' | tr -d '\\n' | wc -c)
+    genome_file="${genome}"
+    if [ "\${genome_file}" != "\${genome_file%.gz}" ]; then
+        genome_size=\$(zcat "\${genome_file}" | grep -v '^>' | tr -d '\\n' | wc -c)
     else
-        genome_size=\$(grep -v '^>' ${genome} | tr -d '\\n' | wc -c)
+        genome_size=\$(grep -v '^>' "\${genome_file}" | tr -d '\\n' | wc -c)
     fi
 
     compare_te.R \\
