@@ -2,7 +2,9 @@ process EARLGREY {
     label 'process_high_memory'
     tag "$species"
     //container = 'quay.io/biocontainers/earlgrey:4.2.4--h4ac6f70_0'
-    container 'tobybaril/earlgrey_dfam3.7:latest'
+    //container 'tobybaril/earlgrey_dfam3.7:latest'
+    container 'community.wave.seqera.io/library/earlgrey_bc:3bcfd882bf14ba88'
+
     //containerOptions '-v `pwd`:/data/'
     //stageInMode = 'copy'
 
