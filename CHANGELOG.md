@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.5 - [2026-07-10]
+
+### Fixed
+
+- Earl Grey no longer fails spuriously with exit status 141. `yes | earlGrey` gives `yes` a SIGPIPE once Earl Grey stops reading stdin, which `set -o pipefail` turned into a task failure even on success; the module now checks Earl Grey's own exit status.
+- Earl Grey output now emits the `<species>_earl_results` directory that the process actually produces, instead of a non-existent `earlgreyresults.tsv` (which caused a missing-output error).
+
 ## v1.0.4 - [2026-07-10]
 
 ### Changed

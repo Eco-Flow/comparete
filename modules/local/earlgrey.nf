@@ -15,7 +15,7 @@ process EARLGREY {
     tuple val(species), path(genome)
 
     output:
-    path("earlgreyresults.tsv"), emit: te_results
+    path("${species}_earl_results"), emit: te_results
     path("versions.yml"), emit: versions
 
     script:
@@ -46,8 +46,17 @@ process EARLGREY {
     # Create the output directory
     mkdir -p \${mydir}/${species}_earl_results
 
-    # Run earl grey non-interactively.
+    # Run earl grey non-interactively. `yes` feeds prompt answers and gets SIGPIPE
+    # (exit 141) once Earl Grey stops reading stdin; under `set -o pipefail` that would
+    # fail the task even on success, so use Earl Grey's own exit status instead.
+    set +e
     yes | earlGrey -g genome_line_removal.fasta -s $species -o \${mydir}/${species}_earl_results -t ${task.cpus}
+    earlgrey_status=\${PIPESTATUS[1]}
+    set -e
+    if [ "\${earlgrey_status}" -ne 0 ]; then
+        echo "Earl Grey failed with exit status \${earlgrey_status}" >&2
+        exit \${earlgrey_status}
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
