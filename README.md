@@ -5,31 +5,63 @@ A pipeline to compare TE content across genomes using various platforms.
 
 # Requirements
 
-Requires Nextflow >=26.04.
+- **Nextflow** >=26.04 ([install](https://www.nextflow.io/docs/latest/getstarted.html#installation))
+- **Java** 11+ (required by Nextflow)
+- **Container engine** — one of:
+  - Docker
+  - Singularity / Apptainer
+  - (or install all tools manually if not using containers)
+
+The easiest approach is Docker + Nextflow on Linux/Mac, or Docker Desktop on Windows.
+
+# Quick Start
+
+To run the pipeline immediately with test data:
+
+```bash
+nextflow run main.nf -profile docker,test_bacteria
+```
+
+This runs Earl Grey, HiTE, and RepeatMasker on three bacterial genomes using Docker. Results appear in `results/`.
+
+For your own data, create a CSV file (see [Input](#input) below) and run:
+
+```bash
+nextflow run main.nf --input your_input.csv -profile docker
+```
 
 # Input
 
-Input should be a csv file (ending in `.csv`). 
+Input should be a **samplesheet** CSV file (ending in `.csv`) with **no header row**. 
 
-It should contain either:
+Each row contains: `name,source` where source is one of:
 
+**Option 1: RefSeq ID** (downloaded automatically)
 ```
-name,refseqID
-name,/full/path/to/genome.fa 
-name,/full/path/to/genome.fa,/full/path/to/annotation.gff
+Escherichia_coli,GCF_000005845.2
+Bacillus_subtilis,GCF_000005825.4
 ```
 
-**!! Do not use relative paths !!**
+**Option 2: Local genome file**
+```
+Drosophila_melanogaster,/full/path/to/dm6.fa
+Caenorhabditis_elegans,/full/path/to/ce11.fa
+```
 
-The genome must end with:
+**Option 3: Genome + annotation** (annotation is optional)
+```
+Arabidopsis_thaliana,/full/path/to/TAIR10.fa,/full/path/to/TAIR10.gff3
+```
 
-`'.fa', '.fasta', '.fna', '.fa.gz', '.fasta.gz', '.fna.gz'`
+**File format requirements:**
 
-The annotation must end with:
+Genome must end with: `.fa`, `.fasta`, `.fna`, `.fa.gz`, `.fasta.gz`, or `.fna.gz`
 
-`'.gff', '.gff3', '.gff.gz', '.gff3.gz'`
+Annotation (if provided) must end with: `.gff`, `.gff3`, `.gff.gz`, or `.gff3.gz`
 
-See examples in `conf/test` (various example in config files)
+**⚠️ Do not use relative paths — use absolute paths only**
+
+See examples in `data/` folder.
 
 # Running the pipeline
 
@@ -43,7 +75,15 @@ To run with all the different TE programs on a input csv file called `input.csv`
 
 `nextflow run main.nf --orthofinder --hite --earlgrey --input input.csv -profile docker/singularity/apptainer`
 
-## Earl Grey and the Dfam database (`--famdb`)
+## Orthofinder (optional)
+
+[OrthoFinder v2.5.5](https://github.com/davidemms/OrthoFinder) performs ortholog detection and generates a species tree. Use this if you want to build a phylogenetic tree or identify orthologous genes across your input genomes.
+
+Requires genome annotation (GFF file in the samplesheet). Run with:
+
+```bash
+nextflow run main.nf --orthofinder --input your_input.csv -profile docker
+```
 
 Earl Grey runs from the `tobybaril/earlgrey_dfam3.7` container, which already ships a fully-configured RepeatMasker with Dfam 3.7. So in most cases you just run:
 

@@ -88,29 +88,18 @@ workflow {
        }
        .set { local_full_tuple }
 
-    //Split channel into 2, keep tuple the same for gffread and take just sample id and fasta for fastavalidator
-    DOWNLOAD_NCBI.out.genome.mix(local_full_tuple)
-         .multiMap { it ->
-             gffread: it
-             tuple: [[ id: it[0]], it[1]]
-          }
-          .set { fasta_inputs }
+    // Only run GFFREAD if orthofinder is enabled (requires GFF annotation)
+    if (params.orthofinder) {
+       GFFREAD ( DOWNLOAD_NCBI.out.genome.mix(input_type.path) )
+       ch_versions = ch_versions.mix(GFFREAD.out.versions.first())
 
+       merge_ch = GFFREAD.out.longest.collect()
 
-   
-   GFFREAD ( DOWNLOAD_NCBI.out.genome.mix(input_type.path) )
-   ch_versions = ch_versions.mix(GFFREAD.out.versions.first())
+       ORTHOFINDER ( merge_ch )
+    }
 
-   merge_ch = GFFREAD.out.longest.collect()
-
-   if (params.orthofinder){
-
-      ORTHOFINDER ( merge_ch )
-
-   }
-
-   //Only takes NCBI genomes, but later we need to add locally input genomes.
-   ch_te_genome = GFFREAD.out.just_genome.mix(genomeonly)
+    //Only takes NCBI genomes, but later we need to add locally input genomes.
+    ch_te_genome = params.orthofinder ? GFFREAD.out.just_genome.mix(genomeonly) : DOWNLOAD_NCBI.out.genome.mix(input_type.path).map { n, f, g -> tuple(n, f) }.mix(genomeonly)
 
    // Each TE method emits, per species, a tagged (species, method, output) tuple.
    // These are mixed together so any subset of methods can be combined downstream.
