@@ -1,6 +1,8 @@
 # CompareTE
 A pipeline to compare TE content across genomes using various platforms.
 
+![alt text](./assets/image.png)
+
 # Requirements
 
 Requires Nextflow >=26.04.
