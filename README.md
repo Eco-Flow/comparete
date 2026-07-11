@@ -68,20 +68,17 @@ Options:
 
 Outputs (masked genome, `.out`, `.tbl`, `.gff`, the repeat library, and a combined `.tsv`) are written to `results/repeatmasker/`.
 
-## Comparing Earl Grey and HiTE (`COMPARE_TE`)
+## Combining TE methods (`PARSE_TE` / `COMBINE_TE`)
 
-When both `--earlgrey` and `--hite` are supplied, the pipeline runs a `COMPARE_TE` step per species that combines the two tools' transposable-element annotations. It parses Earl Grey's `filteredRepeats.gff` and HiTE's RepeatMasker `.out`, maps both tools' classifications to common high-level TE classes (DNA, LTR, LINE, SINE, Penelope, RC/Helitron, Other/Simple, Unclassified), and writes to `results/compare_te/`:
+Whenever one or more TE methods are run (`--earlgrey`, `--hite`, `--repeatmasker`), the pipeline parses each method's output into a normalised per-species, per-method table (`PARSE_TE`) and then merges everything into combined outputs (`COMBINE_TE`). It reads Earl Grey's `filteredRepeats.gff`, HiTE's RepeatMasker `.out`, and RepeatMasker's `.out`, mapping all of them to common high-level TE classes (DNA, LTR, LINE, SINE, Penelope, RC/Helitron, Other/Simple, Unclassified).
 
-- `<species>_te_comparison.tsv` — total TE bp, copy number, and % genome per tool.
-- `<species>_te_comparison_by_class.tsv` — per-class breakdown side by side.
-- `<species>_te_comparison.pdf` — a totals bar chart and a per-class grouped bar chart.
+This works for **any subset** of methods — one, two, or all three. Outputs in `results/compare_te/`:
 
-A final `COMBINE_TE` step then merges all species into combined outputs (also in `results/compare_te/`):
+- `combined_te_totals.tsv` — total TE bp, copy number, and % genome for every species × method.
+- `combined_te_by_class.tsv` — per-class breakdown for every species × method.
+- `combined_te_comparison.pdf` — a cross-species totals bar chart (coloured by method) and a per-class figure faceted by species.
 
-- `combined_te_totals.tsv` / `combined_te_by_class.tsv` — all species and both tools in one table.
-- `combined_te_comparison.pdf` — a cross-species totals bar chart and a per-class figure faceted by species.
-
-`nextflow run main.nf --earlgrey --hite --famdb ... --input input.csv -profile singularity`
+`nextflow run main.nf --earlgrey --hite --repeatmasker --famdb ... --input input.csv -profile singularity`
 
 ## HPC cluster profiles
 

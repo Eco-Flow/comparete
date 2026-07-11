@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 
 # combine_te.R
-# Merge the per-species Earl Grey vs HiTE comparison tables (produced by
-# compare_te.R) into a single combined table and overview figure across all
-# species. Reads every staged *_te_comparison.tsv and *_te_comparison_by_class.tsv
-# in the working directory (each already carries a `species` column).
+# Merge the normalised per-species, per-method TE tables (from parse_te.R) into
+# combined tables and an overview figure. Works for any subset of methods
+# (Earl Grey, HiTE, RepeatMasker) that were run. Reads every staged
+# *_te.tsv in the working directory.
 
 suppressPackageStartupMessages({
   library(dplyr)
@@ -13,46 +13,49 @@ suppressPackageStartupMessages({
   library(ggplot2)
 })
 
-totals_files  <- list.files(pattern = "_te_comparison\\.tsv$")
-byclass_files <- list.files(pattern = "_te_comparison_by_class\\.tsv$")
+files <- list.files(pattern = "_te\\.tsv$")
+if (length(files) == 0) stop("combine_te.R: no per-method TE tables found")
 
-if (length(totals_files) == 0) stop("combine_te.R: no per-species totals tables found")
+dat <- bind_rows(lapply(files, read_tsv, show_col_types = FALSE))
 
-totals <- bind_rows(lapply(totals_files, read_tsv, show_col_types = FALSE)) %>%
-  arrange(species, tool)
+all_classes <- c("DNA", "RC/Helitron", "LTR", "LINE", "SINE", "Penelope",
+                 "Other/Simple", "Unclassified")
+method_labels <- c(earlgrey = "Earl Grey", hite = "HiTE", repeatmasker = "RepeatMasker")
+dat <- dat %>%
+  mutate(method_label = dplyr::recode(method, !!!method_labels),
+         class = factor(class, levels = all_classes))
+
+# ---- combined tables --------------------------------------------------------
+by_class <- dat %>%
+  select(species, method, method_label, class, bp, copies, pct_genome) %>%
+  arrange(species, method, class)
+write_tsv(by_class, "combined_te_by_class.tsv")
+
+totals <- dat %>%
+  group_by(species, method, method_label, genome_size) %>%
+  summarise(total_bp = sum(bp), total_copies = sum(copies), .groups = "drop") %>%
+  mutate(pct_genome = 100 * total_bp / genome_size) %>%
+  arrange(species, method)
 write_tsv(totals, "combined_te_totals.tsv")
 
-byclass <- bind_rows(lapply(byclass_files, read_tsv, show_col_types = FALSE))
-write_tsv(byclass, "combined_te_by_class.tsv")
-
 # ---- figures ----------------------------------------------------------------
-tool_cols <- c(EarlGrey = "#4C72B0", HiTE = "#DD8452")
+# Distinct, colour-blind-friendly palette keyed by method label.
+method_cols <- c("Earl Grey" = "#4C72B0", "HiTE" = "#DD8452", "RepeatMasker" = "#55A868")
 
-# Overview: total TE content per species, grouped by tool
-p_tot <- ggplot(totals, aes(species, pct_genome, fill = tool)) +
+p_tot <- ggplot(totals, aes(species, pct_genome, fill = method_label)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  scale_fill_manual(values = tool_cols) +
-  labs(title = "Total TE content: Earl Grey vs HiTE",
-       x = NULL, y = "% genome covered", fill = "Tool") +
+  scale_fill_manual(values = method_cols, name = "Method") +
+  labs(title = "Total TE content by method",
+       x = NULL, y = "% genome covered") +
   theme_minimal(base_size = 12) +
   theme(axis.text.x = element_text(angle = 40, hjust = 1))
 
-# Per-class overview, faceted by species (pivot the wide pct_genome_* columns)
-all_classes <- c("DNA", "RC/Helitron", "LTR", "LINE", "SINE", "Penelope",
-                 "Other/Simple", "Unclassified")
-byclass_long <- byclass %>%
-  select(species, class, starts_with("pct_genome_")) %>%
-  pivot_longer(cols = starts_with("pct_genome_"),
-               names_to = "tool", names_prefix = "pct_genome_",
-               values_to = "pct_genome") %>%
-  mutate(class = factor(class, levels = all_classes))
-
-p_cls <- ggplot(byclass_long, aes(class, pct_genome, fill = tool)) +
+p_cls <- ggplot(dat, aes(class, pct_genome, fill = method_label)) +
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
-  scale_fill_manual(values = tool_cols) +
+  scale_fill_manual(values = method_cols, name = "Method") +
   facet_wrap(~ species, scales = "free_y") +
-  labs(title = "TE content by class: Earl Grey vs HiTE",
-       x = NULL, y = "% genome covered", fill = "Tool") +
+  labs(title = "TE content by class and method",
+       x = NULL, y = "% genome covered") +
   theme_minimal(base_size = 11) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -61,5 +64,5 @@ print(p_tot)
 print(p_cls)
 invisible(dev.off())
 
-message("combine_te.R: wrote combined tables and overview figure for ",
-        length(unique(totals$species)), " species")
+message("combine_te.R: combined ", length(unique(dat$method)), " method(s) across ",
+        length(unique(dat$species)), " species")

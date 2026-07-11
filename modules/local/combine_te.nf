@@ -3,8 +3,7 @@ process COMBINE_TE {
     container 'rocker/tidyverse:latest'
 
     input:
-    path(per_species_totals)
-    path(per_species_by_class)
+    path(per_method_tables)
 
     output:
     path("combined_te_totals.tsv")     , emit: totals

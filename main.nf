@@ -5,7 +5,7 @@ include { GFFREAD } from './modules/local/gffread.nf'
 include { ORTHOFINDER } from './modules/local/orthofinder.nf'
 include { EARLGREY } from './modules/local/earlgrey.nf'
 include { HITE } from './modules/local/hite.nf'
-include { COMPARE_TE } from './modules/local/compare_te.nf'
+include { PARSE_TE } from './modules/local/parse_te.nf'
 include { COMBINE_TE } from './modules/local/combine_te.nf'
 include { REPEATMASKERSUB } from './subworkflows/local/repeatmaskersub.nf'
 
@@ -112,16 +112,22 @@ workflow {
    //Only takes NCBI genomes, but later we need to add locally input genomes.
    ch_te_genome = GFFREAD.out.just_genome.mix(genomeonly)
 
-   ch_earlgrey = Channel.empty()
+   // Each TE method emits, per species, a tagged (species, method, output) tuple.
+   // These are mixed together so any subset of methods can be combined downstream.
+   ch_te_annot = Channel.empty()
+
    if (params.earlgrey){
       EARLGREY (ch_te_genome)
-      ch_earlgrey = EARLGREY.out.te_results
+      ch_te_annot = ch_te_annot.mix(
+         EARLGREY.out.te_results.map { sp, d -> tuple(sp, 'earlgrey', d) }
+      )
    }
 
-   ch_hite = Channel.empty()
    if (params.hite){
       HITE (ch_te_genome)
-      ch_hite = HITE.out.hite_results
+      ch_te_annot = ch_te_annot.mix(
+         HITE.out.hite_results.map { sp, d -> tuple(sp, 'hite', d) }
+      )
    }
 
    // RepeatMasker / RepeatModeler TE annotation subworkflow (optional).
@@ -144,19 +150,17 @@ workflow {
          params.run_repeatmodeler,
          params.te_clusterer
       )
+      ch_te_annot = ch_te_annot.mix(
+         REPEATMASKERSUB.out.out.map { meta, f -> tuple(meta.id, 'repeatmasker', f) }
+      )
    }
 
-   // When both TE annotators have run, combine their results per species.
-   // Join keyed on species so each COMPARE_TE gets the matching Earl Grey and
-   // HiTE outputs plus the genome (for total-size / percentage calculations).
-   if (params.earlgrey && params.hite){
-      COMPARE_TE ( ch_earlgrey.join(ch_hite).join(ch_te_genome) )
-
-      // Merge the per-species comparisons into one combined table and figure.
-      COMBINE_TE (
-         COMPARE_TE.out.table.map { sp -> sp[1] }.collect(),
-         COMPARE_TE.out.table_by_class.map { sp -> sp[1] }.collect()
-      )
+   // Parse each method's output into a normalised per-(species, method) table,
+   // then combine everything that ran into one table + figure. Works for any
+   // subset of methods (one, two, or all three).
+   if (params.earlgrey || params.hite || params.repeatmasker){
+      PARSE_TE ( ch_te_annot.combine(ch_te_genome, by: 0) )
+      COMBINE_TE ( PARSE_TE.out.table.map { sp, f -> f }.collect() )
    }
 
 }
