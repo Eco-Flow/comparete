@@ -97,6 +97,36 @@
           "type": "boolean",
           "description": "Run HiTE for transposable element detection.",
           "fa_icon": "fas fa-bug"
+        },
+        "repeatmasker": {
+          "type": "boolean",
+          "description": "Run the RepeatMasker/RepeatModeler subworkflow for transposable element annotation.",
+          "help_text": "Uses the Dfam library from --famdb (via famdb.py) to mask each genome with RepeatMasker. Optionally builds a de novo library first with --run_repeatmodeler.",
+          "fa_icon": "fas fa-bug"
+        },
+        "run_repeatmodeler": {
+          "type": "boolean",
+          "description": "Within --repeatmasker, also build a de novo repeat library with RepeatModeler (slow, adds substantial runtime per genome).",
+          "fa_icon": "fas fa-cogs"
+        },
+        "te_clusterer": {
+          "type": "string",
+          "default": "linclust",
+          "enum": ["linclust", "mmseqs", "cdhit"],
+          "description": "Clustering tool used to reduce redundancy in the RepeatMasker library.",
+          "fa_icon": "fas fa-layer-group"
+        },
+        "repeatmasker_speed": {
+          "type": "string",
+          "default": "qq",
+          "enum": ["default", "q", "qq"],
+          "description": "RepeatMasker sensitivity/speed: 'default' (most sensitive), 'q' (quick), 'qq' (fastest).",
+          "fa_icon": "fas fa-tachometer-alt"
+        },
+        "famdb_lineage": {
+          "type": "string",
+          "description": "Lineage to extract from the famdb for RepeatMasker (e.g. 'hymenoptera'). Defaults to 'root' when unset.",
+          "fa_icon": "fas fa-sitemap"
         }
       }
     },

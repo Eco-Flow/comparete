@@ -7,6 +7,7 @@ include { EARLGREY } from './modules/local/earlgrey.nf'
 include { HITE } from './modules/local/hite.nf'
 include { COMPARE_TE } from './modules/local/compare_te.nf'
 include { COMBINE_TE } from './modules/local/combine_te.nf'
+include { REPEATMASKERSUB } from './subworkflows/local/repeatmaskersub.nf'
 
 include { validateParameters; paramsHelp; paramsSummaryLog } from 'plugin/nf-schema'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
@@ -121,6 +122,28 @@ workflow {
    if (params.hite){
       HITE (ch_te_genome)
       ch_hite = HITE.out.hite_results
+   }
+
+   // RepeatMasker / RepeatModeler TE annotation subworkflow (optional).
+   if (params.repeatmasker){
+      if (params.famdb == null) {
+         log.error "--repeatmasker requires a Dfam famdb. Provide one with --famdb /path/to/famdb (a directory containing the Dfam .h5 partitions)."
+         exit 1
+      }
+      // Wrap comparete's (species, genome) tuples as nf-core meta maps, and collect
+      // the famdb .h5 partitions into a single value channel for famdb.py.
+      ch_rm_fasta = ch_te_genome.map { sp, g -> tuple([id: sp], g) }
+      ch_famdb_h5 = Channel.fromPath("${params.famdb}/*.h5")
+                       .collect()
+                       .map { files -> tuple([id: 'famdb'], files) }
+
+      REPEATMASKERSUB (
+         ch_rm_fasta,
+         ch_famdb_h5,
+         params.famdb_lineage ?: 'root',
+         params.run_repeatmodeler,
+         params.te_clusterer
+      )
    }
 
    // When both TE annotators have run, combine their results per species.

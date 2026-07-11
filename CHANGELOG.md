@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.0 - [2026-07-11]
+
+### Added
+
+- New `REPEATMASKERSUB` subworkflow (`--repeatmasker`) that annotates TEs with RepeatMasker, adapted from genomeqc's `FASTA_ANNOTATE_TE`. It extracts a repeat library from the `--famdb` Dfam database with `famdb.py`, optionally builds a de novo library with RepeatModeler (`--run_repeatmodeler`), clusters the library (`--te_clusterer`: linclust/mmseqs/cdhit), masks each genome, and parses the RepeatMasker `.tbl` files into a combined TSV. Speed controlled by `--repeatmasker_speed`; lineage by `--famdb_lineage`.
+- Ported modules: FAMDB_PY_EMBL, REPEATMODELER_BUILDDATABASE, REPEATMODELER_REPEATMODELER, CAT_CAT, CDHIT_CDHITEST, MMSEQS_EASYCLUSTER, MMSEQS_EASYLINCLUST, REPEATMASKER_REPEATMASKER, TE_TBL_2_TABLE (plus `famdb_embl_to_fasta.py` and `te_tbl_2_table.py`).
+
 ## v1.1.2 - [2026-07-11]
 
 ### Fixed
