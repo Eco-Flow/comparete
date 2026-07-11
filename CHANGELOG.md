@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.1 - [2026-07-11]
+
+### Fixed
+
+- RepeatMasker subworkflow failed under Wave with `Wave container request image cannot start with URL like prefix`. The ported nf-core modules now set `ext.singularity_pull_docker_container = true` so they present docker image names (which Wave augments) instead of `https://` galaxyproject Singularity URLs.
+- Set `overwrite = true` on the timeline/report/trace/dag files so reruns don't abort with "file already exists".
+
 ## v1.3.0 - [2026-07-11]
 
 ### Changed
