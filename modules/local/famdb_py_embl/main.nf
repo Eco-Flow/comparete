@@ -5,7 +5,7 @@ process FAMDB_PY_EMBL {
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
         ? 'https://depot.galaxyproject.org/singularity/repeatmasker:4.2.2--pl5321hdfd78af_0'
-        : 'biocontainers/repeatmasker:4.2.2--pl5321hdfd78af_0' }"
+        : 'quay.io/biocontainers/repeatmasker:4.2.2--pl5321hdfd78af_0' }"
 
     input:
     tuple val(meta), path(h5_dir)
