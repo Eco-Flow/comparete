@@ -1,7 +1,7 @@
 # CompareTE
 A pipeline to compare TE content across genomes using various platforms.
 
-![alt text](./assets/image.png)
+<img src="./assets/image.png" alt="CompareTE pipeline" width="50%">
 
 # Requirements
 
